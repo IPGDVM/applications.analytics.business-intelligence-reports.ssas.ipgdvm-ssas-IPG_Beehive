@@ -1,0 +1,3055 @@
+{
+  "name": "SemanticModel",
+  "compatibilityLevel": 1500,
+  "model": {
+    "culture": "en-US",
+    "dataSources": [
+      {
+        "name": "iBI",
+        "connectionString": "Provider=MSDASQL;Persist Security Info=False;Initial Catalog=HSD_ES;DSN=iBI DaaS",
+        "impersonationMode": "impersonateServiceAccount",
+        "annotations": [
+          {
+            "name": "ConnectionEditUISource",
+            "value": "Others"
+          }
+        ]
+      },
+      {
+        "type": "structured",
+        "name": "Odbc/dsn=IPG Beehive",
+        "connectionDetails": {
+          "protocol": "odbc",
+          "address": {
+            "options": {
+              "dsn": "IPG Beehive"
+            }
+          },
+          "authentication": null,
+          "query": null
+        },
+        "options": {
+          "hierarchicalNavigation": true
+        },
+        "credential": {
+          "AuthenticationKind": "ServiceAccount"
+        }
+      },
+      {
+        "type": "structured",
+        "name": "AnalysisServices/IPG_IPtoSOC intel com;IPG_IPtoSOC",
+        "connectionDetails": {
+          "protocol": "analysis-services",
+          "address": {
+            "server": "IPG_IPtoSOC.intel.com",
+            "database": "IPG_IPtoSOC"
+          },
+          "authentication": null,
+          "query": null
+        },
+        "options": {
+          "typedMeasureColumns": true,
+          "implementation": "2.0"
+        },
+        "credential": {
+          "AuthenticationKind": "ServiceAccount",
+          "kind": "AnalysisServices",
+          "path": "ipg_iptosoc.intel.com;IPG_IPtoSOC"
+        }
+      }
+    ],
+    "tables": [
+      {
+        "name": "beehive",
+        "columns": [
+          {
+            "name": "ibi_bulk_id",
+            "dataType": "int64",
+            "sourceColumn": "ibi_bulk_id",
+            "sourceProviderType": "BigInt"
+          },
+          {
+            "name": "ibi_row_id",
+            "dataType": "int64",
+            "sourceColumn": "ibi_row_id",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "ibi_ins_dtm",
+            "dataType": "dateTime",
+            "sourceColumn": "ibi_ins_dtm",
+            "formatString": "General Date",
+            "sourceProviderType": "Date"
+          },
+          {
+            "name": "ibi_updt_dtm",
+            "dataType": "dateTime",
+            "sourceColumn": "ibi_updt_dtm",
+            "formatString": "General Date",
+            "sourceProviderType": "Date"
+          },
+          {
+            "name": "block_id",
+            "dataType": "int64",
+            "sourceColumn": "block_id",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "block_name",
+            "dataType": "string",
+            "sourceColumn": "block_name",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "project",
+            "dataType": "string",
+            "sourceColumn": "project",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "stepping",
+            "dataType": "string",
+            "sourceColumn": "stepping",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "activity",
+            "dataType": "string",
+            "sourceColumn": "activity",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "tag",
+            "dataType": "string",
+            "sourceColumn": "tag",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "quality_type",
+            "dataType": "string",
+            "sourceColumn": "quality_type",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "ww",
+            "dataType": "string",
+            "sourceColumn": "ww",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "original_ww",
+            "dataType": "string",
+            "sourceColumn": "original_ww",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "ind_id",
+            "dataType": "int64",
+            "sourceColumn": "ind_id",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "timestamp",
+            "dataType": "dateTime",
+            "sourceColumn": "timestamp",
+            "formatString": "General Date",
+            "sourceProviderType": "Date"
+          },
+          {
+            "name": "pulled_timestamp",
+            "dataType": "dateTime",
+            "sourceColumn": "pulled_timestamp",
+            "formatString": "General Date",
+            "sourceProviderType": "Date"
+          },
+          {
+            "name": "field",
+            "dataType": "string",
+            "sourceColumn": "field",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "value",
+            "dataType": "string",
+            "sourceColumn": "value",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "indicator",
+            "dataType": "string",
+            "sourceColumn": "indicator",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "source_excel_file",
+            "dataType": "string",
+            "sourceColumn": "source_excel_file",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "sampletime",
+            "dataType": "dateTime",
+            "sourceColumn": "sampletime",
+            "formatString": "General Date",
+            "sourceProviderType": "Date"
+          },
+          {
+            "name": "model",
+            "dataType": "string",
+            "sourceColumn": "model",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "type": "calculated",
+            "name": "field_mod",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "IF(CONTAINSSTRING([field], \"###\"), PATHITEM(SUBSTITUTE([field], \"###\", \"|\"), 1), -- if it is an apr field delimited by ### then we have the METRIC###Scenario, scenario is broken out seperately, otherwise take the metric name, and then get the last metric name from the PVXCOLON delimited fields",
+              "IF(CONTAINSSTRING([field], \"PVXCOLON\"), IF([field_parent_level2] <> \"No Parent\", IF(len(PATHITEM(SUBSTITUTE([field], \"PVXCOLON\", \"|\"), 3))=0, PATHITEM(SUBSTITUTE([field], \"PVXCOLON\", \"|\"), 4), PATHITEM(SUBSTITUTE([field], \"PVXCOLON\", \"|\"), 3)), PATHITEM(SUBSTITUTE([field], \"PVXCOLON\", \"|\"), 2)), [field]))"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "scenario",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "PATHITEM(SUBSTITUTE([field], \"###\", \"|\"), 2) -- used for APR stages in which scenario is delimited by ###"
+          },
+          {
+            "type": "calculated",
+            "name": "val_int",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": "IFERROR(ABS(VALUE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE([value], \"(\", \"\"), \")\", \"\"), \"%\", \"\"), \"GB\", \"\"))), BLANK()) -- convert different syntaxes to POSITIVE number values to be used in min/max/sum/avg functions in graphing"
+          },
+          {
+            "type": "calculated",
+            "name": "ww_original",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "YEAR([timestamp]) & IF(WEEKNUM([timestamp]) < 10, \"0\", \"\") & WEEKNUM([timestamp]) & \".\" & WEEKDAY([timestamp])"
+          },
+          {
+            "type": "calculated",
+            "name": "metric",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF(LEN(RELATED(beehive_metrics[friendly_name])) < 1, [field_mod], RELATED(beehive_metrics[friendly_name]))",
+            "sortByColumn": "metric_order"
+          },
+          {
+            "type": "calculated",
+            "name": "metric_order",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": "value(RELATED(beehive_metrics[order]))"
+          },
+          {
+            "type": "calculated",
+            "name": "metric_aggregation",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF(ISBLANK(RELATED(beehive_metrics[aggregation])), \"sum\", RELATED(beehive_metrics[aggregation]))"
+          },
+          {
+            "type": "calculated",
+            "name": "color_code",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "IFERROR(IF(VALUE([value]) < 0, 1, BLANK()), BLANK())"
+          },
+          {
+            "type": "calculated",
+            "name": "metric_type",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF(ISBLANK(RELATED(beehive_metrics[type_final])), \"text\", RELATED(beehive_metrics[type_final]))"
+          },
+          {
+            "type": "calculated",
+            "name": "metric_round",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": "IF(ISBLANK(RELATED(beehive_metrics[type_2])), 0, RELATED(beehive_metrics[type_2]))"
+          },
+          {
+            "type": "calculated",
+            "name": "closure domain",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "var closure_dom = PATHITEM(SUBSTITUTE([closure domain intrm], \"_\", \"|\", 3), 2) return ",
+              "",
+              "IF([category] = \"Checklist\", IF(LEN(closure_dom) < 1, \"*closure summary\",  closure_dom), [closure domain intrm])"
+            ],
+            "sortByColumn": "closure_domain_order"
+          },
+          {
+            "type": "calculated",
+            "name": "category",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF([activity] = \"bh_finale\" && FIND(\"PVXCOLON\", [field], 1, -1) > -1 && [closure metric]  in {\"error\", \"fail\", \"waive\", \"apprv\", \"pass\", \"overall_status\", \"domain_status\", \"indicator\", \"STATUS\"}, IF(CONTAINSSTRING([field], \"sd_checklist\"), \"Checklist\", \"Closure\"),\"Technical Metric\")"
+          },
+          {
+            "type": "calculated",
+            "name": "closure check",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "var check = PATHITEM(SUBSTITUTE([field], \"PVXCOLON\", \"|\"), 2) return IF([closure domain] = \"*closure summary\", \"*closure summary\",  IF(len(check) < 1, \"*domain summary\", check) )"
+          },
+          {
+            "type": "calculated",
+            "name": "closure metric",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "PATHITEM(SUBSTITUTE([field], \"PVXCOLON\", \"|\"), 3)"
+          },
+          {
+            "type": "calculated",
+            "name": "color_score",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "SWITCH([value], \"ERROR\", 5, \"FAIL\", 4, \"WAIVE\", 3, \"APPRV\", 2, \"PASS\", 1, IF([val_int] > 0, SWITCH([closure metric], \"error\", 5, \"fail\", 4, \"waive\", 3, \"apprv\", 2, \"pass\", 1 ), blank()))"
+          },
+          {
+            "type": "calculated",
+            "name": "latest",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF([ind_id] = CALCULATE(max(beehive[ind_id]), FILTER(beehive, beehive[block_id] = EARLIEST(beehive[block_id]) && beehive[activity] = EARLIEST(beehive[activity]) && beehive[quality_type] = EARLIEST(beehive[quality_type]) && beehive[tag] = EARLIEST(beehive[tag]))), \"latest\", [ww_original]&\"\")"
+          },
+          {
+            "type": "calculated",
+            "name": "0_val",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF([val_int] = 0, \"0\", \"non-0\")"
+          },
+          {
+            "type": "calculated",
+            "name": "desc_map",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "[ind_id]&[closure check]&[field_parent_level1]"
+          },
+          {
+            "type": "calculated",
+            "name": "debug_msg",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "IF([activity] in {\"bh_lv_icv\", \"bh_lvg_lv_icv\", \"bh_lv_calibre\"},",
+              "",
+              "LOOKUPVALUE(debugMSG[debug], debugMSG[indid], beehive[ind_id], debugMSG[name], beehive[field_parent_level1] &\"PVXCOLON\" & beehive[field_parent_level2] & \"PVXCOLONerrors\") & \"",
+              "Runtime: \" &",
+              "LOOKUPVALUE(beehive[value],beehive[ind_id], beehive[ind_id],beehive[field], beehive[field_parent_level1] &\"PVXCOLONPVXCOLONruntime\") & \"",
+              "Violation Path: \" &",
+              "LOOKUPVALUE(debugMSG[debug], debugMSG[indid], beehive[ind_id], debugMSG[name], beehive[field_parent_level1] &\"PVXCOLONPVXCOLONerrors\")",
+              "",
+              ", ",
+              "",
+              "LOOKUPVALUE(debugMSG[debug_final], debugMSG[indid], beehive[ind_id], debugMSG[closure domain], beehive[closure domain intrm], debugMSG[closure check], beehive[closure check] )",
+              ")"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "closure_indicator_value",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "CALCULATE(LASTNONBLANK(beehive[value], 1), FILTER(beehive, beehive[ind_id] = EARLIEST(beehive[ind_id]) && beehive[closure metric] = \"indicator\" && beehive[closure check] = EARLIEST(beehive[closure check])  && beehive[closure domain] = EARLIEST([closure domain]) ))"
+          },
+          {
+            "type": "calculated",
+            "name": "closure_status",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "--this is the status of the closure check",
+              "CALCULATE(LASTNONBLANK(beehive[value], 1), FILTER(beehive, beehive[ind_id] = EARLIEST(beehive[ind_id]) && beehive[closure metric] = \"status\" && beehive[closure check] = EARLIEST(beehive[closure check]) && beehive[closure domain] = EARLIEST(beehive[closure domain])  ))"
+            ],
+            "sortByColumn": "check_status_order"
+          },
+          {
+            "type": "calculated",
+            "name": "domain_status",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "CALCULATE(LASTNONBLANK(beehive[value], 1), FILTER(beehive, beehive[ind_id] = EARLIEST(beehive[ind_id]) && beehive[closure metric] = \"domain_status\" && beehive[closure domain] = EARLIEST(beehive[closure domain])))",
+            "sortByColumn": "domain_status_order"
+          },
+          {
+            "type": "calculated",
+            "name": "check_color",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "SWITCH([closure_status], \"ERROR\", 5, \"FAIL\", 4, \"WAIVE\", 3, \"APPRV\", 2, \"PASS\", 1, blank())"
+          },
+          {
+            "type": "calculated",
+            "name": "field_parent_level1",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "-- if there is a PVCOLON hierarchy then we break out the parent field (there can be 3 levels we care about)",
+              "IF(CONTAINSSTRING([field], \"PVXCOLON\"), PATHITEM(SUBSTITUTE([field], \"PVXCOLON\", \"|\"), 1), \"No Parent\")"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "field_parent_level2",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "var level1 = PATHITEM(SUBSTITUTE([field], \"PVXCOLON\", \"|\", 1), 2) return",
+              "IF(CONTAINSSTRING(level1, \"PVXCOLON\"),  PATHITEM(SUBSTITUTE(level1, \"PVXCOLON\", \"|\"), 1), \"No Parent\") "
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "domain_status_order",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "RELATED(domain_status_order[order])"
+          },
+          {
+            "type": "calculated",
+            "name": "check_status_order",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "RELATED(check_status_order[order])"
+          },
+          {
+            "type": "calculated",
+            "name": "timing_mode",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF(CONTAINSSTRING(beehive[field_parent_level1], \"func\"), \"func\", IF(CONTAINSSTRING(beehive[field_parent_level1], \"dfx\"), \"dfx\", \"no mode\"))"
+          },
+          {
+            "type": "calculated",
+            "name": "timing_type",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF(CONTAINSSTRING(beehive[field_parent_level1], \"min\"), \"min\", IF(CONTAINSSTRING(beehive[field_parent_level1], \"max\"), \"max\", \"no type\"))"
+          },
+          {
+            "type": "calculated",
+            "name": "waived_for_metric",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": "LOOKUPVALUE(beehive[val_int], beehive[ind_id], beehive[ind_id], beehive[metric], beehive[metric]&\"_waived\", blank())"
+          },
+          {
+            "type": "calculated",
+            "name": "is_metric",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "IF(CONTAINSSTRING([metric], \"_waived\") || LEft([metric], 1) = \"_\" || CONTAINSSTRING([metric], \"_category\"), ",
+              "\"no\", \"yes\")"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "closure domain intrm",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "var check = PATHITEM(SUBSTITUTE([field], \"PVXCOLON\", \"|\"), 1) return IF([category] in { \"Closure\" , \"Checklist\"}, IF(LEN(check) < 1, \"*closure summary\", check) , [field_parent_level1])"
+          },
+          {
+            "type": "calculated",
+            "name": "closure_domain_order",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": [
+              "var ord = PATHITEM(SUBSTITUTE([closure domain intrm], \"_\", \"|\"), 3) return",
+              "if(len(ord) < 1, -1, ",
+              "IFERROR(IF([category] = \"Checklist\", VALUE(ord), 0), 0)",
+              ")"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "val_whole",
+            "dataType": "int64",
+            "isDataTypeInferred": false,
+            "expression": "IFERROR(VALUE([val_int]), blank())",
+            "formatString": "0"
+          },
+          {
+            "type": "calculated",
+            "name": "clean_err",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF([0_val] = \"0\", \"Passing Checks\", \"Failing Checks\")"
+          },
+          {
+            "type": "calculated",
+            "name": "lv_status",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "--this is the status of the LV activities",
+              "CALCULATE(LASTNONBLANK(beehive[value], 1), FILTER(beehive, beehive[ind_id] = EARLIEST(beehive[ind_id]) && beehive[metric] = \"STATUS\" && beehive[field_parent_level1] = EARLIEST(beehive[field_parent_level1])))"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "lv_metric_filter",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "IF([lv_status] = \"CLEAN\" && len([field_parent_level2]) < 1, 1, IF(LEN([field_parent_level2]) > 1, 1, 0))"
+          },
+          {
+            "type": "calculated",
+            "name": "lv_Status_int",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "SWITCH([lv_status], \"FATAL\", 3, \"DIRTY\", 2, \"CLEAN\", 1, 0)"
+          },
+          {
+            "type": "calculated",
+            "name": "carbon_config_id",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "RELATED(blocks_info[carbon_config_id])"
+          },
+          {
+            "type": "calculated",
+            "name": "next_drop",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "LOOKUPVALUE(ip_data[next_drop], ip_data[IpConfigurationId], beehive[carbon_config_id])"
+          },
+          {
+            "type": "calculated",
+            "name": "next_trend",
+            "dataType": "int64",
+            "isDataTypeInferred": false,
+            "expression": "LOOKUPVALUE(ip_data[next_milestone_trend], ip_data[IpConfigurationId], beehive[carbon_config_id])",
+            "formatString": "0"
+          },
+          {
+            "type": "calculated",
+            "name": "milestone_range_check",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              " ",
+              "var time_to_drop = [next_trend] - [current_ww] return",
+              "",
+              "IF(NOT(ISBLANK([next_trend])), IF(time_to_drop < 7 && time_to_drop > 2 , \"decrease\", IF(time_to_drop <= 2 , \"target\", blank())), blank())"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "color_type",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "",
+              "\tif([next_drop] in {\"UVopt\", \"RTL1P0\"} && [timing_type] = \"max\" , ",
+              "\t\t if(beehive[metric] in {\"Int Paths -50 to -30\",\"Int Paths worse than -50\"}, \"red\",",
+              "\t\t IF(beehive[metric] in {\"Int Paths -30 to -20\"}, \"yellow\",",
+              "\t\t  if(beehive[metric] in {\"Int Paths -05 to 0\",\"Int Paths -10 to -05\",\"Int Paths -20 to -10\"}, \"green\", blank()))),",
+              "",
+              "\tif([next_drop] in {\"UV2\", \"POLO\"} && [timing_type] = \"max\", ",
+              "\t\t",
+              "\t\t if(beehive[metric] in {\"Int Paths -50 to -30\",\"Int Paths worse than -50\",\"Int Paths -30 to -20\"}, \"red\",",
+              "\t\t IF(beehive[metric] in {\"Int Paths -20 to -10\" }, \"yellow\",",
+              "\t\t  if(beehive[metric] in {\"Int Paths -05 to 0\",\"Int Paths -10 to -05\" }, \"green\", blank()))),",
+              "",
+              "\t if([next_drop] in {\"eFV\", \"FV\", \"PROD\"} && [timing_type] in {\"min\", \"max\"} && beehive[metric] in {\"Int Paths -05 to 0\",\"Int Paths -10 to -05\",\"Int Paths -20 to -10\",\"Int Paths -30 to -20\",\"Int Paths -50 to -20\",\"Int Paths -50 to -30\",\"Int Paths worse than -50\"} , \"red\",blank())))",
+              ""
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "beehive",
+            "dataView": "full",
+            "source": {
+              "type": "query",
+              "query": "Select * from V_BM_BE_CHEETAH_UNIFY_DATA where project = 'IPG'",
+              "dataSource": "iBI"
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>Select * from V_BM_BE_CHEETAH_UNIFY_DATA where project = 'IPG'</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+              }
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "name": "closure_table_val",
+            "expression": "IF(hasonevalue(beehive[closure metric]),  LASTNONBLANK(beehive[value], 1), if(hasonevalue(beehive[closure check]),CALCULATE(LASTNONBLANK(beehive[value], 1), FILTER(beehive, beehive[closure metric] = \"indicator\")), IF(hasonevalue(beehive[closure domain]), CALCULATE(LASTNONBLANK(beehive[value], 1), FILTER(beehive, beehive[closure metric] = \"domain_status\")), SWITCH([closure_table_color], 5, \"ERROR\", 4, \"FAIL\", 3, \"WAIVE\", 2, \"APPRV\", 1, \"PASS\", blank()))))"
+          },
+          {
+            "name": "closure_table_color",
+            "expression": "MAX(beehive[color_score])"
+          },
+          {
+            "name": "clsure_title",
+            "expression": "\"Detail Check Status for \" & IF(HASONEVALUE(blocks_info[block]), \"block: \" & LASTNONBLANK(blocks_info[block], 1), \"all blocks\") & \" and \" &  IF(HASONEVALUE(beehive[closure domain]), \"domain: \" & LASTNONBLANK(beehive[closure domain], 1), \"all domains\")"
+          },
+          {
+            "name": "closure_desc",
+            "expression": "IF(HASONEVALUE(beehive[closure check]) && HASONEVALUE(blocks_info[block]), \"Description: \" & LASTNONBLANK(closure_desc[value], 1), \"Select a block and check to see the description and debug details\")"
+          },
+          {
+            "name": "closure_debug",
+            "expression": "IF(HASONEVALUE(beehive[closure check]) && HASONEVALUE(blocks_info[block]),LASTNONBLANK(beehive[debug_msg], 1), \"\")"
+          },
+          {
+            "name": "closure_table_val_old",
+            "expression": "IF(HASONEVALUE(beehive[value]), LASTNONBLANK(beehive[value], 1), CALCULATE( SUM(beehive[val_int]) , FILTER(beehive, beehive[closure metric] in {\"error\", \"fail\", \"apprv\", \"waive\"})) ) ",
+            "formatString": "0"
+          },
+          {
+            "name": "timing_scenario",
+            "expression": " \"Violations Over Time by Block - \" & IF(HASONEVALUE(beehive[field_parent_level1]), LASTNONBLANK(beehive[field_parent_level1], 1), \"Multiple Scenarios\")"
+          },
+          {
+            "name": "timing_scenario_metric",
+            "expression": " \"Violations Over Time by Metric - \" & IF(HASONEVALUE(beehive[field_parent_level1]), LASTNONBLANK(beehive[field_parent_level1], 1), \"Multiple Scenarios\")"
+          },
+          {
+            "name": "metric_waived",
+            "expression": "SUM(beehive[val_int]) &  IF(NOT(ISBLANK(SUM([waived_for_metric]))), \" (\"& SUM(beehive[waived_for_metric]) &\")\", blank())"
+          },
+          {
+            "name": "metric_waive_Color",
+            "expression": [
+              "IF(SUM(beehive[waived_for_metric]) > 0 , 1, -- if there is anythgin waived then make it yellow",
+              "",
+              " IF(SUM(beehive[val_int]) = 0, 0, 2)) -- else if nothing waived and violations = 0 then green, else red "
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": "Select * from V_BM_BE_CHEETAH_UNIFY_DATA where project = 'IPG'"
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "beehive"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>Select * from V_BM_BE_CHEETAH_UNIFY_DATA where project = 'IPG'</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+          }
+        ]
+      },
+      {
+        "name": "blocks_info",
+        "columns": [
+          {
+            "name": "block_id",
+            "dataType": "int64",
+            "sourceColumn": "block_id",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "block",
+            "dataType": "string",
+            "sourceColumn": "block",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "portal",
+            "dataType": "string",
+            "sourceColumn": "portal",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "stepping",
+            "dataType": "string",
+            "sourceColumn": "stepping",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "design_style",
+            "dataType": "string",
+            "sourceColumn": "design_style",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "physical_parent",
+            "dataType": "string",
+            "sourceColumn": "physical_parent",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "block_group",
+            "dataType": "string",
+            "sourceColumn": "block_group",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "ip_category",
+            "dataType": "string",
+            "sourceColumn": "ip_category",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "hier_type",
+            "dataType": "string",
+            "sourceColumn": "hier_type",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "blocktype",
+            "dataType": "string",
+            "sourceColumn": "blocktype",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "physspec_parent",
+            "dataType": "string",
+            "sourceColumn": "physspec_parent",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "ip_ss",
+            "dataType": "string",
+            "sourceColumn": "ip_ss",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "hierarchy",
+            "dataType": "string",
+            "sourceColumn": "hierarchy",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "type": "calculated",
+            "name": "carbon_config_id",
+            "dataType": "int64",
+            "isDataTypeInferred": false,
+            "expression": "LOOKUPVALUE(block_config_map[carbon_config_id], block_config_map[block_id], [block_id], block_config_map[latest], \"latest\")"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "blocks_info",
+            "dataView": "full",
+            "source": {
+              "type": "query",
+              "query": [
+                "select",
+                "block_id,",
+                "block_name as block,",
+                "stepping as portal,",
+                "stepping as stepping,",
+                "design_style,",
+                "physical_parent,",
+                "block_group,",
+                "ip_category,",
+                "hierarchy as hier_type,",
+                "blocktype,",
+                "physspec_parent,",
+                "ip_ss,",
+                "hierarchy",
+                "",
+                "from",
+                "[V_BM_BE_CHEETAH_BLOCKS_INFO]  bi",
+                "where",
+                "ibi_updt_dtm > getdate() - 2",
+                "and project like 'IPG'"
+              ],
+              "dataSource": "iBI"
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": [
+                  "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select",
+                  "block_id,",
+                  "block_name as block,",
+                  "stepping as portal,",
+                  "stepping as stepping,",
+                  "design_style,",
+                  "physical_parent,",
+                  "block_group,",
+                  "ip_category,",
+                  "hierarchy as hier_type,",
+                  "blocktype,",
+                  "physspec_parent,",
+                  "ip_ss,",
+                  "hierarchy",
+                  "",
+                  "from",
+                  "[V_BM_BE_CHEETAH_BLOCKS_INFO]  bi",
+                  "where",
+                  "ibi_updt_dtm > getdate() - 2",
+                  "and project like 'IPG'</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+                ]
+              }
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": [
+              "select",
+              "block_id,",
+              "block_name as block,",
+              "stepping as portal,",
+              "stepping as stepping,",
+              "design_style,",
+              "physical_parent,",
+              "block_group,",
+              "ip_category,",
+              "hierarchy as hier_type,",
+              "blocktype,",
+              "physspec_parent,",
+              "ip_ss,",
+              "hierarchy",
+              "",
+              "from",
+              "[V_BM_BE_CHEETAH_BLOCKS_INFO]  bi",
+              "where",
+              "ibi_updt_dtm > getdate() - 2",
+              "and project like 'IPG'"
+            ]
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "blocks_info"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": [
+              "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select",
+              "block_id,",
+              "block_name as block,",
+              "stepping as portal,",
+              "stepping as stepping,",
+              "design_style,",
+              "physical_parent,",
+              "block_group,",
+              "ip_category,",
+              "hierarchy as hier_type,",
+              "blocktype,",
+              "physspec_parent,",
+              "ip_ss,",
+              "hierarchy",
+              "",
+              "from",
+              "[V_BM_BE_CHEETAH_BLOCKS_INFO]  bi",
+              "where",
+              "ibi_updt_dtm > getdate() - 2",
+              "and project like 'IPG'</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "beehive_ind_list",
+        "columns": [
+          {
+            "name": "block_id",
+            "dataType": "int64",
+            "sourceColumn": "block_id",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "ind_id",
+            "dataType": "int64",
+            "sourceColumn": "ind_id",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "timestamp",
+            "dataType": "dateTime",
+            "sourceColumn": "timestamp",
+            "formatString": "General Date",
+            "sourceProviderType": "Date"
+          },
+          {
+            "type": "calculated",
+            "name": "ww_original",
+            "dataType": "double",
+            "isDataTypeInferred": false,
+            "expression": "YEAR([timestamp]) & IF(WEEKNUM([timestamp]) < 10, \"0\", \"\") & WEEKNUM([timestamp]) & \".\" & WEEKDAY([timestamp])",
+            "formatString": "0.0"
+          },
+          {
+            "name": "activity",
+            "dataType": "string",
+            "sourceColumn": "activity"
+          },
+          {
+            "type": "calculated",
+            "name": "activity_order",
+            "dataType": "int64",
+            "isDataTypeInferred": false,
+            "expression": "IF(ISBLANK(LOOKUPVALUE(beehive_activities[order], beehive_activities[activity], [activity])), 0, IFERROR(VALUE(LOOKUPVALUE(beehive_activities[order], beehive_activities[activity], [activity])), 0))"
+          },
+          {
+            "type": "calculated",
+            "name": "check",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": " [ww_original] + (beehive_ind_list[activity_order] / 1000 )"
+          },
+          {
+            "type": "calculated",
+            "name": "latest_stage",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "IF(rankx(",
+              "\t\t\tCALCULATETABLE(beehive_ind_list,  ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[block_id] = EARLIER(beehive_ind_list[block_id])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[act_category] = EARLIER(beehive_ind_list[act_category])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[ww_original]<= LASTNONBLANK('ww_list_old'[ww], 0))",
+              "\t\t\t), ",
+              "\t\t\tbeehive_ind_list[ww_original] + (beehive_ind_list[activity_order] / 100 ) , , desc) = 1",
+              ", [activity], blank())"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "act_category",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF(ISBLANK(LOOKUPVALUE(beehive_activities[category], beehive_activities[activity], [activity])), \"Other\", IFERROR(LOOKUPVALUE(beehive_activities[category], beehive_activities[activity], [activity]), BLANK()))"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "beehive_ind_list",
+            "dataView": "full",
+            "source": {
+              "type": "query",
+              "query": [
+                "select ",
+                "distinct ",
+                "[activity],",
+                "[block_id],",
+                "[ind_id],",
+                "max([timestamp]) as timestamp",
+                "from",
+                "[V_BM_BE_CHEETAH_UNIFY_DATA]",
+                "where project = 'IPG'",
+                "group by ",
+                "[activity],",
+                "[block_id],",
+                "[ind_id]"
+              ],
+              "dataSource": "iBI"
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": [
+                  "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select ",
+                  "distinct ",
+                  "[activity],",
+                  "[block_id],",
+                  "[ind_id],",
+                  "max([timestamp]) as timestamp",
+                  "from",
+                  "[V_BM_BE_CHEETAH_UNIFY_DATA]",
+                  "where project = 'IPG'",
+                  "group by ",
+                  "[activity],",
+                  "[block_id],",
+                  "[ind_id]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+                ]
+              }
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "name": "value_final",
+            "expression": "[value_max] + [value_sum]"
+          },
+          {
+            "name": "chart_title",
+            "expression": "CONCATENATEX(DISTINCT(beehive[metric]), beehive[metric], \", \") & \" - Over Time by Block\""
+          },
+          {
+            "name": "value_sum",
+            "expression": [
+              "",
+              "CALCULATE(",
+              "\tsumx(beehive, beehive[val_int]), ",
+              "\tfilter(beehive_ind_list, ",
+              "\t\trankx(",
+              "\t\t\tCALCULATETABLE(beehive_ind_list,  ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[block_id] = EARLIER(beehive_ind_list[block_id])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[act_category] = EARLIER(beehive_ind_list[act_category])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[ww_original]<= LASTNONBLANK('ww_list'[ww_orig_adj], 0))",
+              "\t\t\t), ",
+              "\t\t\tbeehive_ind_list[ww_original] + (beehive_ind_list[activity_order] / 1000 ) , , DESC) = 1",
+              "\t), ",
+              "\tFILTER(beehive_ind_list, beehive_ind_list[ww_original]<= LASTNONBLANK('ww_list'[ww_orig_adj], 0)),",
+              "\tFILTER(beehive, beehive[metric_aggregation] = \"sum\")",
+              ") ",
+              "\t\t"
+            ]
+          },
+          {
+            "name": "value_max",
+            "expression": [
+              "",
+              "CALCULATE(",
+              "\tmaxx(beehive, beehive[val_int]), ",
+              "\tfilter(beehive_ind_list, ",
+              "\t\trankx(",
+              "\t\t\tCALCULATETABLE(beehive_ind_list,  ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[block_id] = EARLIER(beehive_ind_list[block_id])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[act_category] = EARLIER(beehive_ind_list[act_category])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[ww_original]<= LASTNONBLANK('ww_list'[ww_orig_adj], 0))",
+              "\t\t\t), ",
+              "\t\t\tbeehive_ind_list[ww_original] + (beehive_ind_list[activity_order] / 1000 ) , , DESC) = 1",
+              "\t), ",
+              "\tFILTER(beehive_ind_list, beehive_ind_list[ww_original]<= LASTNONBLANK('ww_list'[ww_orig_adj], 0)),",
+              "\tFILTER(beehive, beehive[metric_aggregation] = \"max\")",
+              ") ",
+              "\t\t"
+            ]
+          },
+          {
+            "name": "tbl_val_int",
+            "expression": "IF(LASTNONBLANK(beehive[metric_type], 1) = \"int\", ROUND([value_final], 0), blank())"
+          },
+          {
+            "name": "tbl_val_float",
+            "expression": "IF(LASTNONBLANK(beehive[metric_type], 1) = \"float\", ROUND([value_final], MAX(beehive[metric_round])), blank())"
+          },
+          {
+            "name": "tbl_val_perc",
+            "expression": "IF(NOT(ISBLANK([value_final])), IF(LASTNONBLANK(beehive[metric_type], 1) = \"percentage\", ROUND([value_final], 2) & \"%\", blank()), blank())"
+          },
+          {
+            "name": "tbl_val_final",
+            "expression": "var scen_count = CALCULATE(DISTINCTCOUNT(beehive[scenario])) return [tbl_val_perc] & [tbl_val_float] & [tbl_val_int] & [tbl_val_txt] &  IF(scen_count > 1 && NOT(ISBLANK([value_final])), \" (\" & scen_count & \")\" , blank() ) "
+          },
+          {
+            "name": "tbl_val_txt",
+            "expression": "IF(LASTNONBLANK(beehive[metric_type], 1) = \"text\", LASTNONBLANK(beehive[value], 1), blank())"
+          },
+          {
+            "name": "value_sum_whole",
+            "expression": "[value_sum]",
+            "formatString": "0"
+          },
+          {
+            "name": "value_sum_prev",
+            "expression": [
+              "",
+              "CALCULATE(",
+              "\tsumx(beehive, beehive[val_int]), ",
+              "\tfilter(beehive_ind_list, ",
+              "\t\trankx(",
+              "\t\t\tCALCULATETABLE(beehive_ind_list,  ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[block_id] = EARLIER(beehive_ind_list[block_id])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[act_category] = EARLIER(beehive_ind_list[act_category])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[ww_original]<= [current_ww]-1  )",
+              "\t\t\t), ",
+              "\t\t\tbeehive_ind_list[ww_original] + (beehive_ind_list[activity_order] / 1000 ) , , DESC) = 1",
+              "\t), ",
+              "\tFILTER(beehive_ind_list, beehive_ind_list[ww_original]<= [current_ww]-1   ),",
+              "\tFILTER(beehive, beehive[metric_aggregation] = \"sum\")",
+              ") ",
+              "\t\t"
+            ]
+          },
+          {
+            "name": "timing_summary_color",
+            "expression": [
+              "",
+              "IF([value_sum] = 0, 2,",
+              "switch(LASTNONBLANK(beehive[milestone_range_check], 1),  ",
+              "\"decrease\", IF([value_sum] < [value_sum_prev], 0 /* light green */ , 1 /* light yellow */),",
+              "\"target\",",
+              "\tIF(CALCULATE([value_sum], FILTER(beehive, beehive[color_type] = \"red\") ) > 0 , 5 /* red */,",
+              "\tif(CALCULATE([value_sum], FILTER(beehive,beehive[color_type] = \"yellow\")) > 0, 4 /* yellow */,",
+              "\tif(CALCULATE([value_sum], FILTER(beehive,beehive[color_type] = \"green\")) > 0, 2 /* green*/))))",
+              ")"
+            ]
+          },
+          {
+            "name": "timing_history_change",
+            "expression": "[value_sum_whole]-[value_sum_prev]"
+          },
+          {
+            "name": "value_max_all",
+            "expression": [
+              " // gets the max across whatever selected metrics",
+              " CALCULATE(",
+              "\tmaxx(beehive, beehive[val_int]), ",
+              "\tfilter(beehive_ind_list, ",
+              "\t\trankx(",
+              "\t\t\tCALCULATETABLE(beehive_ind_list,  ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[block_id] = EARLIER(beehive_ind_list[block_id])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[act_category] = EARLIER(beehive_ind_list[act_category])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[ww_original]<= LASTNONBLANK('ww_list'[ww_orig_adj], 0))",
+              "\t\t\t), ",
+              "\t\t\tbeehive_ind_list[ww_original] + (beehive_ind_list[activity_order] / 1000 ) , , DESC) = 1",
+              "\t), ",
+              "\tFILTER(beehive_ind_list, beehive_ind_list[ww_original]<= LASTNONBLANK('ww_list'[ww_orig_adj], 0))",
+              ") ",
+              "\t\t"
+            ],
+            "formatString": "0"
+          },
+          {
+            "name": "value_min_all",
+            "expression": [
+              " // gets the min across whatever selected metrics",
+              " CALCULATE(",
+              "\tminx(beehive, beehive[val_int]), ",
+              "\tfilter(beehive_ind_list, ",
+              "\t\trankx(",
+              "\t\t\tCALCULATETABLE(beehive_ind_list,  ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[block_id] = EARLIER(beehive_ind_list[block_id])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[act_category] = EARLIER(beehive_ind_list[act_category])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[ww_original]<= LASTNONBLANK('ww_list'[ww_orig_adj], 0))",
+              "\t\t\t), ",
+              "\t\t\tbeehive_ind_list[ww_original] + (beehive_ind_list[activity_order] / 1000 ) , , DESC) = 1",
+              "\t), ",
+              "\tFILTER(beehive_ind_list, beehive_ind_list[ww_original]<= LASTNONBLANK('ww_list'[ww_orig_adj], 0))",
+              ") ",
+              "\t\t"
+            ]
+          },
+          {
+            "name": "value_avg_all",
+            "expression": [
+              " // gets the average across whatever selected metrics",
+              " CALCULATE(",
+              "\tAVERAGEX(beehive, beehive[val_int]), ",
+              "\tfilter(beehive_ind_list, ",
+              "\t\trankx(",
+              "\t\t\tCALCULATETABLE(beehive_ind_list,  ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[block_id] = EARLIER(beehive_ind_list[block_id])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[act_category] = EARLIER(beehive_ind_list[act_category])), ",
+              "\t\t\t\tfilter(beehive_ind_list, beehive_ind_list[ww_original]<= LASTNONBLANK('ww_list'[ww_orig_adj], 0))",
+              "\t\t\t), ",
+              "\t\t\tbeehive_ind_list[ww_original] + (beehive_ind_list[activity_order] / 1000 ) , , DESC) = 1",
+              "\t), ",
+              "\tFILTER(beehive_ind_list, beehive_ind_list[ww_original]<= LASTNONBLANK('ww_list'[ww_orig_adj], 0))",
+              ") ",
+              "\t\t"
+            ],
+            "formatString": "0"
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": [
+              "select ",
+              "distinct ",
+              "[activity],",
+              "[block_id],",
+              "[ind_id],",
+              "max([timestamp]) as timestamp",
+              "from",
+              "[V_BM_BE_CHEETAH_UNIFY_DATA]",
+              "where project = 'IPG'",
+              "group by ",
+              "[activity],",
+              "[block_id],",
+              "[ind_id]"
+            ]
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "beehive_ind_list"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": [
+              "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select ",
+              "distinct ",
+              "[activity],",
+              "[block_id],",
+              "[ind_id],",
+              "max([timestamp]) as timestamp",
+              "from",
+              "[V_BM_BE_CHEETAH_UNIFY_DATA]",
+              "where project = 'IPG'",
+              "group by ",
+              "[activity],",
+              "[block_id],",
+              "[ind_id]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ww_list",
+        "columns": [
+          {
+            "name": "timestamp",
+            "dataType": "dateTime",
+            "sourceColumn": "timestamp",
+            "formatString": "General Date",
+            "sourceProviderType": "Date"
+          },
+          {
+            "name": "time_frame",
+            "dataType": "string",
+            "sourceColumn": "time_frame",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "type": "calculated",
+            "name": "ww_original",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "YEAR([timestamp]) & IF(WEEKNUM([timestamp]) < 10, \"0\", \"\") & WEEKNUM([timestamp]) & \".\" & WEEKDAY([timestamp])",
+              "",
+              ""
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "ww_orig_adj",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": " VALUE([ww_original]) "
+          },
+          {
+            "type": "calculated",
+            "name": "ww_xaxis",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF([time_frame] = \"weekly\", left([ww_original], 6), [ww_original])"
+          },
+          {
+            "type": "calculated",
+            "name": "map",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "[time_frame]&[ww_original]"
+          },
+          {
+            "type": "calculated",
+            "name": "ww_only",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "LEFT([ww_original], 6)"
+          },
+          {
+            "type": "calculated",
+            "name": "history",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "IF([ww_orig_adj] <= value([current_ww]), 1,0)"
+          },
+          {
+            "type": "calculated",
+            "name": "ww_axis_val",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": "value([ww_xaxis])"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "ww_list",
+            "dataView": "full",
+            "source": {
+              "type": "query",
+              "query": [
+                "select cast(Date, datetime) as timestamp, 'weekly' as time_frame   from",
+                "v_time_day",
+                "where",
+                "cast(Date, datetime) >=  getdate() - 600",
+                "and [Intel Year-Work Week] <= datepart(ww, now())  ",
+                "",
+                "",
+                "union all ",
+                "",
+                "select cast(Date, datetime) as timestamp, 'daily' as time_frame   from",
+                "v_time_day",
+                "where",
+                "cast(Date, datetime) >=  getdate() - 600",
+                "and [Intel Year-Work Week] <=  datepart(ww, now())"
+              ],
+              "dataSource": "iBI"
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": [
+                  "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select cast(Date, datetime) as timestamp, 'weekly' as time_frame   from",
+                  "v_time_day",
+                  "where",
+                  "cast(Date, datetime) >=  getdate() - 600",
+                  "and [Intel Year-Work Week] <= datepart(ww, now())  ",
+                  "",
+                  "",
+                  "union all ",
+                  "",
+                  "select cast(Date, datetime) as timestamp, 'daily' as time_frame   from",
+                  "v_time_day",
+                  "where",
+                  "cast(Date, datetime) >=  getdate() - 600",
+                  "and [Intel Year-Work Week] <=  datepart(ww, now())</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+                ]
+              }
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "name": "current_ww",
+            "expression": "YEAR(now()) & IF(WEEKNUM(now()) < 10, \"0\", \"\") & WEEKNUM(now()) & \".\" & WEEKDAY(now())"
+          },
+          {
+            "name": "current_ww_only",
+            "expression": "YEAR(now()) & IF(WEEKNUM(now()) < 10, \"0\", \"\") & WEEKNUM(now()) "
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": [
+              "select cast(Date, datetime) as timestamp, 'weekly' as time_frame   from",
+              "v_time_day",
+              "where",
+              "cast(Date, datetime) >=  getdate() - 600",
+              "and [Intel Year-Work Week] <= datepart(ww, now())  ",
+              "",
+              "",
+              "union all ",
+              "",
+              "select cast(Date, datetime) as timestamp, 'daily' as time_frame   from",
+              "v_time_day",
+              "where",
+              "cast(Date, datetime) >=  getdate() - 600",
+              "and [Intel Year-Work Week] <=  datepart(ww, now())"
+            ]
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "ww_list"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": [
+              "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select cast(Date, datetime) as timestamp, 'weekly' as time_frame   from",
+              "v_time_day",
+              "where",
+              "cast(Date, datetime) >=  getdate() - 600",
+              "and [Intel Year-Work Week] <= datepart(ww, now())  ",
+              "",
+              "",
+              "union all ",
+              "",
+              "select cast(Date, datetime) as timestamp, 'daily' as time_frame   from",
+              "v_time_day",
+              "where",
+              "cast(Date, datetime) >=  getdate() - 600",
+              "and [Intel Year-Work Week] <=  datepart(ww, now())</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "beehive_activities",
+        "columns": [
+          {
+            "name": "activity",
+            "dataType": "string",
+            "sourceColumn": "activity",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "order",
+            "dataType": "string",
+            "sourceColumn": "order",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "friendly_name",
+            "dataType": "string",
+            "sourceColumn": "friendly_name",
+            "sortByColumn": "order_int",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "category",
+            "dataType": "string",
+            "sourceColumn": "category",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "ibi_updated_date",
+            "dataType": "dateTime",
+            "sourceColumn": "ibi_updated_date",
+            "formatString": "General Date",
+            "sourceProviderType": "Date"
+          },
+          {
+            "type": "calculated",
+            "name": "order_int",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": [
+              "IFERROR(IF(ISBLANK(VALUE([order])), 99, VALUE([order])), 99)",
+              "",
+              ""
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "beehive_activities",
+            "dataView": "full",
+            "source": {
+              "type": "query",
+              "query": [
+                "select * from ",
+                "[ipg_beehive_activity_meta_mdm]"
+              ],
+              "dataSource": "iBI"
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": [
+                  "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select * from ",
+                  "[ipg_beehive_activity_meta_mdm]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+                ]
+              }
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": [
+              "select * from ",
+              "[ipg_beehive_activity_meta_mdm]"
+            ]
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "beehive_activities"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": [
+              "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select * from ",
+              "[ipg_beehive_activity_meta_mdm]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "beehive_metrics",
+        "columns": [
+          {
+            "name": "metric",
+            "dataType": "string",
+            "sourceColumn": "metric",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "order",
+            "dataType": "string",
+            "sourceColumn": "order",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "friendly_name",
+            "dataType": "string",
+            "sourceColumn": "friendly_name",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "type",
+            "dataType": "string",
+            "sourceColumn": "type",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "aggregation",
+            "dataType": "string",
+            "sourceColumn": "aggregation",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "category",
+            "dataType": "string",
+            "sourceColumn": "category",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "ibi_updated_date",
+            "dataType": "dateTime",
+            "sourceColumn": "ibi_updated_date",
+            "formatString": "General Date",
+            "sourceProviderType": "Date"
+          },
+          {
+            "type": "calculated",
+            "name": "type_final",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "PATHITEM(SUBSTITUTE([type], \" \", \"|\"), 1)"
+          },
+          {
+            "type": "calculated",
+            "name": "type_2",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": "IFERROR(VALUE(PATHITEM(SUBSTITUTE([type], \" \", \"|\"), 2)), BLANK())"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "beehive_metrics",
+            "dataView": "full",
+            "source": {
+              "type": "query",
+              "query": [
+                "select * from ",
+                "[ipg_beehive_metrics_meta_mdm]"
+              ],
+              "dataSource": "iBI"
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": [
+                  "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select * from ",
+                  "[ipg_beehive_metrics_meta_mdm]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+                ]
+              }
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": [
+              "select * from ",
+              "[ipg_beehive_metrics_meta_mdm]"
+            ]
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "beehive_metrics"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": [
+              "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select * from ",
+              "[ipg_beehive_metrics_meta_mdm]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "targets",
+        "columns": [
+          {
+            "name": "Org",
+            "dataType": "string",
+            "sourceColumn": "Org",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "ipType",
+            "dataType": "string",
+            "sourceColumn": "ipType",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "milestone",
+            "dataType": "string",
+            "sourceColumn": "milestone",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "metric",
+            "dataType": "string",
+            "sourceColumn": "metric",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "target",
+            "dataType": "string",
+            "sourceColumn": "target",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "ibi_updated_date",
+            "dataType": "dateTime",
+            "sourceColumn": "ibi_updated_date",
+            "formatString": "General Date",
+            "sourceProviderType": "Date"
+          },
+          {
+            "type": "calculated",
+            "name": "target_val",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": "IFERROR(VALUE([target]), blank())"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "targets",
+            "dataView": "full",
+            "source": {
+              "type": "query",
+              "query": [
+                "select * from ",
+                "[ipg_metric_targets_mdm]"
+              ],
+              "dataSource": "iBI"
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": [
+                  "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select * from ",
+                  "[ipg_metric_targets_mdm]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+                ]
+              }
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": [
+              "select * from ",
+              "[ipg_metric_targets_mdm]"
+            ]
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "targets"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": [
+              "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select * from ",
+              "[ipg_metric_targets_mdm]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "tech_node",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "ind_id",
+            "dataType": "int64",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "beehive[ind_id]"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "value",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "beehive[value]"
+          },
+          {
+            "type": "calculated",
+            "name": "tech_node",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "[value]"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "SUMMARIZECOLUMNS(beehive[ind_id], beehive[value], FILTER(beehive,  beehive[field] = \"_tech\"))"
+            }
+          }
+        ]
+      },
+      {
+        "name": "debugMSG",
+        "columns": [
+          {
+            "name": "indid",
+            "dataType": "int64",
+            "sourceColumn": "indid"
+          },
+          {
+            "name": "name",
+            "dataType": "string",
+            "sourceColumn": "name"
+          },
+          {
+            "name": "debug",
+            "dataType": "string",
+            "sourceColumn": "debug"
+          },
+          {
+            "type": "calculated",
+            "name": "closure domain",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "var check = PATHITEM(SUBSTITUTE([name], \"PVXCOLON\", \"|\"), 1) return IF([activity] = \"finale\", IF(LEN(check) < 1, \"*closure summary\", check) , check)",
+              ""
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "closure check",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "var check = PATHITEM(SUBSTITUTE([name], \"PVXCOLON\", \"|\"), 2) return IF([closure domain] = \"*closure summary\", \"*closure summary\",  IF(len(check) < 1, \"*domain summary\", check) )"
+          },
+          {
+            "type": "calculated",
+            "name": "map",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "SWITCH([activity], ",
+              "\"LV\", [indid]&[closure domain]&[closure check]&[name]",
+              ", [indid]&[closure domain]&[closure check])"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "debug_final",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "\"Violation Path: \" & [violation_path] &\"",
+              "\" & [debug_intrm]"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "violation_path",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "LOOKUPVALUE(beehive[value], beehive[ind_id], [indid], beehive[closure metric], \"violation_path\", [latest], \"latest\")"
+          },
+          {
+            "type": "calculated",
+            "name": "debug_intrm",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "SUBSTITUTE(SUBSTITUTE(SUBSTITUTE([debug], \"PVXCOLON\", \":\"), \"PVXCOMMA\", \",\"), \"PVXNEWLINE\", \"",
+              "\") "
+            ]
+          },
+          {
+            "name": "activity",
+            "dataType": "string",
+            "sourceColumn": "activity"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Odbc.Query(\"dsn=IPG Beehive\", \"",
+                "SELECT",
+                "distinct",
+                "'finale' as activity,",
+                "data_table.indid,",
+                "data_table.name,",
+                "case ",
+                "when length(data_table.debug) > 5000 then left(data_table.debug, 5000) + '...(TRUNCATED)'",
+                "else data_table.debug",
+                "end as debug",
+                "FROM  cthindicators.bh_finale AS data_table ",
+                "WHERE",
+                "data_table.name like '%text'",
+                "",
+                "UNION",
+                "",
+                "SELECT",
+                "distinct",
+                "'LV' as activity,",
+                "data_table.indid,",
+                "data_table.name,",
+                "case ",
+                "when length(data_table.debug) > 5000 then left(data_table.debug, 5000) + '...(TRUNCATED)'",
+                "else data_table.debug",
+                "end as debug",
+                "FROM  cthindicators.bh_lv_icv AS data_table ",
+                " WHERE",
+                " data_table.name like '%PVXCOLONerrors'",
+                "",
+                "",
+                "UNION",
+                "",
+                "SELECT",
+                "distinct",
+                "'LV' as activity,",
+                "data_table.indid,",
+                "data_table.name,",
+                "case ",
+                "when length(data_table.debug) > 5000 then left(data_table.debug, 5000) + '...(TRUNCATED)'",
+                "else data_table.debug",
+                "end as debug",
+                "FROM  cthindicators.bh_lvg_lv_icv AS data_table ",
+                " WHERE",
+                " data_table.name like '%PVXCOLONerrors'",
+                "",
+                "",
+                "",
+                "UNION",
+                "",
+                "SELECT",
+                "distinct",
+                "'LV' as activity,",
+                "data_table.indid,",
+                "data_table.name,",
+                "case ",
+                "when length(data_table.debug) > 5000 then left(data_table.debug, 5000) + '...(TRUNCATED)'",
+                "else data_table.debug",
+                "end as debug",
+                "FROM  cthindicators.bh_lv_calibre AS data_table ",
+                " WHERE",
+                " data_table.name like '%PVXCOLONerrors'",
+                "",
+                "",
+                "\")",
+                "in",
+                "    Source"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "closure_desc",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "ind_id",
+            "dataType": "int64",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "beehive[ind_id]"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "value",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "beehive[value]"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "closure check",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "beehive[closure check]"
+          },
+          {
+            "type": "calculated",
+            "name": "map",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": [
+              "[ind_id]&[closure check]&[field_parent_level1]",
+              "// RANDBETWEEN(0, 99999999)"
+            ]
+          },
+          {
+            "type": "calculated",
+            "name": "check_count",
+            "dataType": "int64",
+            "isDataTypeInferred": true,
+            "expression": "CALCULATE(count(closure_desc[value]), FILTER(closure_desc, closure_desc[ind_id] = EARLIEST([ind_id]) && closure_desc[closure check] = EARLIEST(closure_desc[closure check]) &&  closure_desc[field_parent_level1] = EARLIEST(closure_desc[field_parent_level1])))"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "field_parent_level1",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "beehive[field_parent_level1]"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "GROUPBY(filter(beehive, beehive[closure metric] = \"description\" && beehive[latest] = \"latest\" && beehive[closure check] <> \"Log_review\"), beehive[ind_id], beehive[field_parent_level1], beehive[closure check],  beehive[value]) "
+            }
+          }
+        ]
+      },
+      {
+        "name": "block_config_map",
+        "columns": [
+          {
+            "name": "block_id",
+            "dataType": "int64",
+            "sourceColumn": "block_id",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "block_name",
+            "dataType": "string",
+            "sourceColumn": "block_name",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "project",
+            "dataType": "string",
+            "sourceColumn": "project",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "stepping",
+            "dataType": "string",
+            "sourceColumn": "stepping",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "tag",
+            "dataType": "string",
+            "sourceColumn": "tag",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "model",
+            "dataType": "string",
+            "sourceColumn": "model",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "original_ww",
+            "dataType": "string",
+            "sourceColumn": "original_ww",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "carbon_config_id",
+            "dataType": "string",
+            "sourceColumn": "carbon_config_id",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "type": "calculated",
+            "name": "latest",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IF([original_ww] = CALCULATE(MAX([original_ww]), FILTER(block_config_map, [block_id] = EARLIEST([block_id]))), \"latest\", blank())"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "block_config_map",
+            "dataView": "full",
+            "source": {
+              "type": "query",
+              "query": [
+                "select ",
+                "block_id, ",
+                "block_name,",
+                "project,",
+                "stepping,",
+                "tag,",
+                "model,",
+                "original_ww,",
+                "value as carbon_config_id",
+                " From ",
+                "[V_BM_BE_CHEETAH_UNIFY_DATA]",
+                "where",
+                "project = 'IPG'",
+                "and activity = 'bh_carbon_hier'",
+                "and field = 'carbon_ip_config'",
+                "and value != 'NOT DEFINED'"
+              ],
+              "dataSource": "iBI"
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": [
+                  "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select ",
+                  "block_id, ",
+                  "block_name,",
+                  "project,",
+                  "stepping,",
+                  "tag,",
+                  "model,",
+                  "original_ww,",
+                  "value as carbon_config_id",
+                  " From ",
+                  "[V_BM_BE_CHEETAH_UNIFY_DATA]",
+                  "where",
+                  "project = 'IPG'",
+                  "and activity = 'bh_carbon_hier'",
+                  "and field = 'carbon_ip_config'",
+                  "and value != 'NOT DEFINED'</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+                ]
+              }
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": [
+              "select ",
+              "block_id, ",
+              "block_name,",
+              "project,",
+              "stepping,",
+              "tag,",
+              "model,",
+              "original_ww,",
+              "value as carbon_config_id",
+              " From ",
+              "[V_BM_BE_CHEETAH_UNIFY_DATA]",
+              "where",
+              "project = 'IPG'",
+              "and activity = 'bh_carbon_hier'",
+              "and field = 'carbon_ip_config'",
+              "and value != 'NOT DEFINED'"
+            ]
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "block_config_map"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": [
+              "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select ",
+              "block_id, ",
+              "block_name,",
+              "project,",
+              "stepping,",
+              "tag,",
+              "model,",
+              "original_ww,",
+              "value as carbon_config_id",
+              " From ",
+              "[V_BM_BE_CHEETAH_UNIFY_DATA]",
+              "where",
+              "project = 'IPG'",
+              "and activity = 'bh_carbon_hier'",
+              "and field = 'carbon_ip_config'",
+              "and value != 'NOT DEFINED'</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ip_soc_mapping",
+        "columns": [
+          {
+            "name": "IpConfigurationId",
+            "dataType": "int64",
+            "sourceColumn": "IpConfigurationId",
+            "sourceProviderType": "BigInt"
+          },
+          {
+            "name": "Configuration",
+            "dataType": "string",
+            "sourceColumn": "Configuration",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Depth",
+            "dataType": "int64",
+            "sourceColumn": "Depth",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "Is IPG",
+            "dataType": "string",
+            "sourceColumn": "Is IPG",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Carbon ProductName",
+            "dataType": "string",
+            "sourceColumn": "Carbon ProductName",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "DieID",
+            "dataType": "int64",
+            "sourceColumn": "DieID",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "DieName",
+            "dataType": "string",
+            "sourceColumn": "DieName",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "IpConfigurationId, MilestoneId",
+            "dataType": "string",
+            "sourceColumn": "IpConfigurationId, MilestoneId",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "MilestoneId",
+            "dataType": "int64",
+            "sourceColumn": "MilestoneId",
+            "sourceProviderType": "BigInt"
+          },
+          {
+            "name": "Drop matrix order",
+            "dataType": "int64",
+            "sourceColumn": "Drop matrix order",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "is related milestone",
+            "dataType": "int64",
+            "sourceColumn": "is related milestone",
+            "sourceProviderType": "Integer"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "ip_soc_mapping",
+            "dataView": "full",
+            "source": {
+              "type": "query",
+              "query": [
+                "select ",
+                "[IpConfigurationId],",
+                "[Configuration],",
+                "[Depth],",
+                "case when [IpConfigurationId] is not null then 'Yes' else 'No' end as [Is IPG],",
+                "[Carbon ProductName],  ",
+                "[DieID],",
+                "[DieName],",
+                "[IpConfigurationId]+', '+[MilestoneId] as [IpConfigurationId, MilestoneId],",
+                "[MilestoneId],",
+                "[Drop matrix order], ",
+                "[is related milestone]",
+                "from",
+                "[ipg_soc_related_ips_and_milestones]"
+              ],
+              "dataSource": "iBI"
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": [
+                  "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select ",
+                  "[IpConfigurationId],",
+                  "[Configuration],",
+                  "[Depth],",
+                  "case when [IpConfigurationId] is not null then 'Yes' else 'No' end as [Is IPG],",
+                  "[Carbon ProductName],  ",
+                  "[DieID],",
+                  "[DieName],",
+                  "[IpConfigurationId]+', '+[MilestoneId] as [IpConfigurationId, MilestoneId],",
+                  "[MilestoneId],",
+                  "[Drop matrix order], ",
+                  "[is related milestone]",
+                  "from",
+                  "[ipg_soc_related_ips_and_milestones]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+                ]
+              }
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": [
+              "select ",
+              "[IpConfigurationId],",
+              "[Configuration],",
+              "[Depth],",
+              "case when [IpConfigurationId] is not null then 'Yes' else 'No' end as [Is IPG],",
+              "[Carbon ProductName],  ",
+              "[DieID],",
+              "[DieName],",
+              "[IpConfigurationId]+', '+[MilestoneId] as [IpConfigurationId, MilestoneId],",
+              "[MilestoneId],",
+              "[Drop matrix order], ",
+              "[is related milestone]",
+              "from",
+              "[ipg_soc_related_ips_and_milestones]"
+            ]
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "ip_soc_mapping"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": [
+              "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select ",
+              "[IpConfigurationId],",
+              "[Configuration],",
+              "[Depth],",
+              "case when [IpConfigurationId] is not null then 'Yes' else 'No' end as [Is IPG],",
+              "[Carbon ProductName],  ",
+              "[DieID],",
+              "[DieName],",
+              "[IpConfigurationId]+', '+[MilestoneId] as [IpConfigurationId, MilestoneId],",
+              "[MilestoneId],",
+              "[Drop matrix order], ",
+              "[is related milestone]",
+              "from",
+              "[ipg_soc_related_ips_and_milestones]</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ip_data",
+        "columns": [
+          {
+            "name": "IpConfigurationId",
+            "dataType": "int64",
+            "sourceColumn": "IpConfigurationId",
+            "sourceProviderType": "BigInt"
+          },
+          {
+            "name": "Configuration",
+            "dataType": "string",
+            "sourceColumn": "Configuration",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Domain",
+            "dataType": "string",
+            "sourceColumn": "Domain",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "SubDomain",
+            "dataType": "string",
+            "sourceColumn": "SubDomain",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Org",
+            "dataType": "string",
+            "sourceColumn": "Org",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "SubOrg",
+            "dataType": "string",
+            "sourceColumn": "SubOrg",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Supplier",
+            "dataType": "string",
+            "sourceColumn": "Supplier",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "LeadProduct",
+            "dataType": "string",
+            "sourceColumn": "LeadProduct",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "LeadAffectedProduct",
+            "dataType": "string",
+            "sourceColumn": "LeadAffectedProduct",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "old_IpFamily",
+            "dataType": "string",
+            "sourceColumn": "old_IpFamily",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "IpFamilyId",
+            "dataType": "int64",
+            "sourceColumn": "IpFamilyId",
+            "sourceProviderType": "BigInt"
+          },
+          {
+            "name": "IpGeneration",
+            "dataType": "string",
+            "sourceColumn": "IpGeneration",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "AffectedProducts",
+            "dataType": "string",
+            "sourceColumn": "AffectedProducts",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "RequestingProducts",
+            "dataType": "string",
+            "sourceColumn": "RequestingProducts",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "HsdEsId",
+            "dataType": "int64",
+            "sourceColumn": "HsdEsId",
+            "sourceProviderType": "BigInt"
+          },
+          {
+            "name": "IpType",
+            "dataType": "string",
+            "sourceColumn": "IpType",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "IsFunded",
+            "dataType": "boolean",
+            "sourceColumn": "IsFunded",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "sourceProviderType": "Boolean"
+          },
+          {
+            "name": "IsClosed",
+            "dataType": "string",
+            "sourceColumn": "IsClosed",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "IsUnrequestable",
+            "dataType": "string",
+            "sourceColumn": "IsUnrequestable",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "IsRequestable",
+            "dataType": "string",
+            "sourceColumn": "IsRequestable",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Lifecycle",
+            "dataType": "string",
+            "sourceColumn": "Lifecycle",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Node",
+            "dataType": "string",
+            "sourceColumn": "Node",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Process",
+            "dataType": "string",
+            "sourceColumn": "Process",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "MDG Name",
+            "dataType": "string",
+            "sourceColumn": "MDG Name",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "TopLevelModuleName",
+            "dataType": "string",
+            "sourceColumn": "TopLevelModuleName",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Reuse",
+            "dataType": "string",
+            "sourceColumn": "Reuse",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "PlanningStatus",
+            "dataType": "string",
+            "sourceColumn": "PlanningStatus",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "type": "calculated",
+            "name": "next_milestone",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "LOOKUPVALUE(ip_drops[upcoming_drop_per_configuration], ip_drops[ip_milestone_data.IpConfigurationId], ip_data[IpConfigurationId], ip_drops[ip_milestone_data.is execution drop], \"1\")"
+          },
+          {
+            "type": "calculated",
+            "name": "next_drop",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "LOOKUPVALUE(ip_drops[next_milestone], ip_drops[ip_milestone_data.IpConfigurationId], ip_data[IpConfigurationId], ip_drops[ip_milestone_data.is execution drop], \"1\")"
+          },
+          {
+            "type": "calculated",
+            "name": "next_milestone_trend",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": "LOOKUPVALUE(ip_drops[next_milestone_trend], ip_drops[ip_milestone_data.IpConfigurationId], ip_data[IpConfigurationId], ip_drops[ip_milestone_data.is execution drop], \"1\")"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "ip_data",
+            "dataView": "full",
+            "source": {
+              "type": "query",
+              "query": [
+                "select ",
+                " [IpConfigurationId],[Name] as[Configuration],",
+                "[Domain],[SubDomain],[Org],[SubOrg],[Supplier],[LeadProduct],[LeadAffectedProduct],[IpFamily] as [old_IpFamily],[IpFamilyId],[IpGeneration],",
+                "[AffectedProducts],[RequestingProducts],",
+                "[HsdEsId],[IpType],[IsFunded],[IsClosed],[IsUnrequestable],[IsRequestable],[Lifecycle],[Node],[Process],[Project]as [MDG Name],[TopLevelModuleName],[Reuse],[Status]as [PlanningStatus]",
+                "from  [V_IPG_CARBON_IPCONFIGURATION]",
+                "where [Org] ='IPG' ",
+                "and [IpType] != 'services'",
+                "--and [IsUnrequestable] = 'N'"
+              ],
+              "dataSource": "iBI"
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": [
+                  "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select ",
+                  " [IpConfigurationId],[Name] as[Configuration],",
+                  "[Domain],[SubDomain],[Org],[SubOrg],[Supplier],[LeadProduct],[LeadAffectedProduct],[IpFamily] as [old_IpFamily],[IpFamilyId],[IpGeneration],",
+                  "[AffectedProducts],[RequestingProducts],",
+                  "[HsdEsId],[IpType],[IsFunded],[IsClosed],[IsUnrequestable],[IsRequestable],[Lifecycle],[Node],[Process],[Project]as [MDG Name],[TopLevelModuleName],[Reuse],[Status]as [PlanningStatus]",
+                  "from  [V_IPG_CARBON_IPCONFIGURATION]",
+                  "where [Org] ='IPG' ",
+                  "and [IpType] != 'services'",
+                  "--and [IsUnrequestable] = 'N'</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+                ]
+              }
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": [
+              "select ",
+              " [IpConfigurationId],[Name] as[Configuration],",
+              "[Domain],[SubDomain],[Org],[SubOrg],[Supplier],[LeadProduct],[LeadAffectedProduct],[IpFamily] as [old_IpFamily],[IpFamilyId],[IpGeneration],",
+              "[AffectedProducts],[RequestingProducts],",
+              "[HsdEsId],[IpType],[IsFunded],[IsClosed],[IsUnrequestable],[IsRequestable],[Lifecycle],[Node],[Process],[Project]as [MDG Name],[TopLevelModuleName],[Reuse],[Status]as [PlanningStatus]",
+              "from  [V_IPG_CARBON_IPCONFIGURATION]",
+              "where [Org] ='IPG' ",
+              "and [IpType] != 'services'",
+              "--and [IsUnrequestable] = 'N'"
+            ]
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "ip_data"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": [
+              "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select ",
+              " [IpConfigurationId],[Name] as[Configuration],",
+              "[Domain],[SubDomain],[Org],[SubOrg],[Supplier],[LeadProduct],[LeadAffectedProduct],[IpFamily] as [old_IpFamily],[IpFamilyId],[IpGeneration],",
+              "[AffectedProducts],[RequestingProducts],",
+              "[HsdEsId],[IpType],[IsFunded],[IsClosed],[IsUnrequestable],[IsRequestable],[Lifecycle],[Node],[Process],[Project]as [MDG Name],[TopLevelModuleName],[Reuse],[Status]as [PlanningStatus]",
+              "from  [V_IPG_CARBON_IPCONFIGURATION]",
+              "where [Org] ='IPG' ",
+              "and [IpType] != 'services'",
+              "--and [IsUnrequestable] = 'N'</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "gladius",
+        "columns": [
+          {
+            "name": "id",
+            "dataType": "int64",
+            "sourceColumn": "id",
+            "sourceProviderType": "BigInt"
+          },
+          {
+            "name": "IpFamilyId",
+            "dataType": "int64",
+            "sourceColumn": "IpFamilyId",
+            "sourceProviderType": "BigInt"
+          },
+          {
+            "name": "old IpFamily",
+            "dataType": "string",
+            "sourceColumn": "old IpFamily",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "ProductFamily",
+            "dataType": "string",
+            "sourceColumn": "ProductFamily",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "SubOrg",
+            "dataType": "string",
+            "sourceColumn": "SubOrg",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Supplier",
+            "dataType": "string",
+            "sourceColumn": "Supplier",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "IpFamily",
+            "dataType": "string",
+            "sourceColumn": "IpFamily",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Gladius",
+            "dataType": "string",
+            "sourceColumn": "Gladius",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Description",
+            "dataType": "string",
+            "sourceColumn": "Description",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Dev_Lead",
+            "dataType": "string",
+            "sourceColumn": "Dev_Lead",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Product_Owner",
+            "dataType": "string",
+            "sourceColumn": "Product_Owner",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Support_Lead",
+            "dataType": "string",
+            "sourceColumn": "Support_Lead",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Architecture_Lead",
+            "dataType": "string",
+            "sourceColumn": "Architecture_Lead",
+            "sourceProviderType": "VarChar"
+          },
+          {
+            "name": "Program_Manager",
+            "dataType": "string",
+            "sourceColumn": "Program_Manager",
+            "sourceProviderType": "VarChar"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "gladius",
+            "dataView": "full",
+            "source": {
+              "type": "query",
+              "query": [
+                "select [id] , [IpFamilyId], ",
+                "[old_family]as [old IpFamily], ",
+                "[suborg_supplier]as [ProductFamily],",
+                "[devsuborg] as [SubOrg],",
+                "[ip_supplier]as [Supplier],",
+                "[Family] as [IpFamily],   ",
+                "[Gladius],",
+                "[Description],",
+                "[Dev_Lead],  [Product_Owner],   [Support_Lead], [Architecture_Lead],  [Program_Manager]",
+                "from v_ipg_family_gladius"
+              ],
+              "dataSource": "iBI"
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": [
+                  "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select [id] , [IpFamilyId], ",
+                  "[old_family]as [old IpFamily], ",
+                  "[suborg_supplier]as [ProductFamily],",
+                  "[devsuborg] as [SubOrg],",
+                  "[ip_supplier]as [Supplier],",
+                  "[Family] as [IpFamily],   ",
+                  "[Gladius],",
+                  "[Description],",
+                  "[Dev_Lead],  [Product_Owner],   [Support_Lead], [Architecture_Lead],  [Program_Manager]",
+                  "from v_ipg_family_gladius</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+                ]
+              }
+            ]
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": [
+              "select [id] , [IpFamilyId], ",
+              "[old_family]as [old IpFamily], ",
+              "[suborg_supplier]as [ProductFamily],",
+              "[devsuborg] as [SubOrg],",
+              "[ip_supplier]as [Supplier],",
+              "[Family] as [IpFamily],   ",
+              "[Gladius],",
+              "[Description],",
+              "[Dev_Lead],  [Product_Owner],   [Support_Lead], [Architecture_Lead],  [Program_Manager]",
+              "from v_ipg_family_gladius"
+            ]
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "gladius"
+          },
+          {
+            "name": "QueryEditorSerialization",
+            "value": [
+              "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>select [id] , [IpFamilyId], ",
+              "[old_family]as [old IpFamily], ",
+              "[suborg_supplier]as [ProductFamily],",
+              "[devsuborg] as [SubOrg],",
+              "[ip_supplier]as [Supplier],",
+              "[Family] as [IpFamily],   ",
+              "[Gladius],",
+              "[Description],",
+              "[Dev_Lead],  [Product_Owner],   [Support_Lead], [Architecture_Lead],  [Program_Manager]",
+              "from v_ipg_family_gladius</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "check_status_order",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "status",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[status]"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "order",
+            "dataType": "int64",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[order]"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "UNION(row(\"status\", \"PASS\", \"order\", 1), row(\"status\", \"APPRV\", \"order\", 2), row(\"status\", \"WAIVE\", \"order\", 3),row(\"status\",  \"FAIL\", \"order\", 4), row(\"status\", \"ERROR\", \"order\", 5) )"
+            }
+          }
+        ]
+      },
+      {
+        "name": "domain_status_order",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "status",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[status]"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "order",
+            "dataType": "int64",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[order]"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "UNION(row(\"status\", \"PASS\", \"order\", 1), row(\"status\", \"APPRV\", \"order\", 2), row(\"status\", \"WAIVE\", \"order\", 3),row(\"status\",  \"FAIL\", \"order\", 4), row(\"status\", \"ERROR\", \"order\", 5) )"
+            }
+          }
+        ]
+      },
+      {
+        "name": "ww_list_old",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "Value",
+            "dataType": "dateTime",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[Value]"
+          },
+          {
+            "type": "calculated",
+            "name": "ww",
+            "dataType": "double",
+            "isDataTypeInferred": false,
+            "expression": "YEAR([Value]) & IF(WEEKNUM([Value]) < 10, \"0\", \"\") & WEEKNUM([Value]) & \".\" & WEEKDAY([Value]) ",
+            "formatString": "0.0"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "GENERATESERIES(MIN(beehive[timestamp]), UTCTODAY()+1, 1)"
+            }
+          }
+        ]
+      },
+      {
+        "name": "refresh_time",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "refresh_time",
+            "dataType": "dateTime",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "[refresh_time]"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "ROW(\"refresh_time\", now())"
+            }
+          }
+        ]
+      },
+      {
+        "name": "ww_filters",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "ww_original",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "ww_list[ww_original]"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "ww_only",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "ww_list[ww_only]"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "SUMMARIZECOLUMNS(ww_list[ww_original], ww_list[ww_only])"
+            }
+          }
+        ]
+      },
+      {
+        "name": "closure_milestone",
+        "columns": [
+          {
+            "type": "calculatedTableColumn",
+            "name": "ind_id",
+            "dataType": "int64",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "beehive[ind_id]"
+          },
+          {
+            "type": "calculatedTableColumn",
+            "name": "value",
+            "dataType": "string",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sourceColumn": "beehive[value]"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "CalculatedTable 1",
+            "source": {
+              "type": "calculated",
+              "expression": "SUMMARIZECOLUMNS(beehive[ind_id], beehive[value], FILTER(beehive, beehive[field] = \"PVXCOLONPVXCOLONmilestone\"))"
+            }
+          }
+        ]
+      },
+      {
+        "name": "ip_drops",
+        "columns": [
+          {
+            "name": "ip_milestone_data.Configuration",
+            "dataType": "string",
+            "sourceColumn": "ip_milestone_data.Configuration"
+          },
+          {
+            "name": "ip_milestone_data.IpConfigurationId",
+            "dataType": "int64",
+            "sourceColumn": "ip_milestone_data.IpConfigurationId",
+            "formatString": "0"
+          },
+          {
+            "name": "ip_milestone_data.is execution drop",
+            "dataType": "string",
+            "sourceColumn": "ip_milestone_data.is execution drop"
+          },
+          {
+            "name": "last_completed_drop_per_configuration",
+            "dataType": "string",
+            "sourceColumn": "last_completed_drop_per_configuration"
+          },
+          {
+            "name": "upcoming_drop_per_configuration",
+            "dataType": "string",
+            "sourceColumn": "upcoming_drop_per_configuration"
+          },
+          {
+            "type": "calculated",
+            "name": "next_milestone",
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "expression": "IFERROR(left([upcoming_drop_per_configuration], FIND(\" (\", [upcoming_drop_per_configuration])-1), blank())"
+          },
+          {
+            "type": "calculated",
+            "name": "next_milestone_trend",
+            "dataType": "double",
+            "isDataTypeInferred": true,
+            "expression": "IFERROR(value(IF(NOT(ISBLANK([upcoming_drop_per_configuration])) && NOT(CONTAINSSTRING([upcoming_drop_per_configuration], \"()\")), LEFT(RIGHT([upcoming_drop_per_configuration], 7), 6), BLANK())), blank())",
+            "formatString": "0"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"AnalysisServices/IPG_IPtoSOC intel com;IPG_IPtoSOC\",",
+                "    Model1 = Source{[Id=\"Model\"]}[Data],",
+                "    Model2 = Model1{[Id=\"Model\"]}[Data],",
+                "    #\"Added Items\" = Cube.Transform(Model2,",
+                "        {",
+                "            {Cube.AddAndExpandDimensionColumn, \"[ip_milestone_data]\", {\"[ip_milestone_data].[Configuration].[Configuration]\", \"[ip_milestone_data].[IpConfigurationId].[IpConfigurationId]\", \"[ip_milestone_data].[is execution drop].[is execution drop]\"}, {\"ip_milestone_data.Configuration\", \"ip_milestone_data.IpConfigurationId\", \"ip_milestone_data.is execution drop\"}},",
+                "            {Cube.AddMeasureColumn, \"last_completed_drop_per_configuration\", \"[Measures].[last_completed_drop_per_configuration]\"},",
+                "            {Cube.AddMeasureColumn, \"upcoming_drop_per_configuration\", \"[Measures].[upcoming_drop_per_configuration]\"}",
+                "        })",
+                "in",
+                "    #\"Added Items\""
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "bcba5cef-48de-4e5d-bf30-2e1e8fe66627",
+        "fromTable": "beehive",
+        "fromColumn": "ind_id",
+        "toTable": "beehive_ind_list",
+        "toColumn": "ind_id",
+        "crossFilteringBehavior": "bothDirections"
+      },
+      {
+        "name": "e0798dc1-c020-43a0-98f4-a48b5ff6e5af",
+        "fromTable": "beehive_ind_list",
+        "fromColumn": "block_id",
+        "toTable": "blocks_info",
+        "toColumn": "block_id",
+        "crossFilteringBehavior": "bothDirections"
+      },
+      {
+        "name": "6a5b8fa3-ed25-4246-91a5-d6a7691a0074",
+        "fromTable": "beehive",
+        "fromColumn": "field_mod",
+        "toTable": "beehive_metrics",
+        "toColumn": "metric"
+      },
+      {
+        "name": "59a8dc75-8114-4777-9082-983ed472ee94",
+        "toCardinality": "many",
+        "fromTable": "beehive",
+        "fromColumn": "metric",
+        "toTable": "targets",
+        "toColumn": "metric",
+        "crossFilteringBehavior": "bothDirections"
+      },
+      {
+        "name": "8a140ed0-5b68-4a4b-85c0-492c02644d0f",
+        "fromCardinality": "one",
+        "fromTable": "beehive_ind_list",
+        "fromColumn": "ind_id",
+        "toTable": "tech_node",
+        "toColumn": "ind_id",
+        "crossFilteringBehavior": "bothDirections"
+      },
+      {
+        "name": "024a8b21-cfb0-45d5-bc1c-fe4bce3b765c",
+        "fromTable": "beehive",
+        "fromColumn": "desc_map",
+        "toTable": "closure_desc",
+        "toColumn": "map",
+        "crossFilteringBehavior": "bothDirections"
+      },
+      {
+        "name": "aa405267-8560-4328-acba-622a47b8656d",
+        "fromTable": "beehive_ind_list",
+        "fromColumn": "activity",
+        "toTable": "beehive_activities",
+        "toColumn": "activity",
+        "crossFilteringBehavior": "bothDirections"
+      },
+      {
+        "name": "950cbd88-7585-4595-b5c6-d34c8017d559",
+        "toCardinality": "many",
+        "fromTable": "blocks_info",
+        "fromColumn": "carbon_config_id",
+        "toTable": "ip_soc_mapping",
+        "toColumn": "IpConfigurationId",
+        "crossFilteringBehavior": "bothDirections"
+      },
+      {
+        "name": "3b120e7c-a84e-41f3-abb1-d719699e9551",
+        "fromTable": "ip_soc_mapping",
+        "fromColumn": "IpConfigurationId",
+        "toTable": "ip_data",
+        "toColumn": "IpConfigurationId",
+        "crossFilteringBehavior": "bothDirections"
+      },
+      {
+        "name": "ac0696d7-aa7d-4f92-8f61-f50d0af8fb53",
+        "fromTable": "ip_data",
+        "fromColumn": "IpFamilyId",
+        "toTable": "gladius",
+        "toColumn": "IpFamilyId",
+        "crossFilteringBehavior": "bothDirections"
+      },
+      {
+        "name": "178adc76-464e-496f-961b-e00ea055eaaa",
+        "fromTable": "beehive",
+        "fromColumn": "domain_status",
+        "toTable": "domain_status_order",
+        "toColumn": "status"
+      },
+      {
+        "name": "f2d24dd8-9a39-40cc-a305-feded8c2d373",
+        "fromTable": "beehive",
+        "fromColumn": "closure_status",
+        "toTable": "check_status_order",
+        "toColumn": "status"
+      },
+      {
+        "name": "4dfc3c8c-89fe-4967-bceb-79c21696802e",
+        "fromTable": "beehive_ind_list",
+        "fromColumn": "ww_original",
+        "toTable": "ww_filters",
+        "toColumn": "ww_original"
+      },
+      {
+        "name": "426e1d3c-2984-41f7-a2d2-8b9c0cf6fa40",
+        "fromCardinality": "one",
+        "fromTable": "beehive_ind_list",
+        "fromColumn": "ind_id",
+        "toTable": "closure_milestone",
+        "toColumn": "ind_id",
+        "crossFilteringBehavior": "bothDirections"
+      }
+    ],
+    "roles": [
+      {
+        "name": "IPG_Developers",
+        "modelPermission": "administrator",
+        "members": [
+          {
+            "memberName": "AMR\\IPG_Dashboard_Developers",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-4603422"
+          }
+        ]
+      },
+      {
+        "name": "IPG_ExternalUsers",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\IPG_Dashboard_Users",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-4603440"
+          }
+        ]
+      },
+      {
+        "name": "IPG_InternalUsers",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "AMR\\IPG_Dashboard_SuperUsers",
+            "memberId": "S-1-5-21-725345543-602162358-527237240-4603439"
+          }
+        ]
+      }
+    ],
+    "annotations": [
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "600"
+      }
+    ]
+  },
+  "id": "SemanticModel"
+}
